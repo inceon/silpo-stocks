@@ -62,7 +62,7 @@ fragment OptimizedProductsFragment on Product {
   }
 }`,
     variables: JSON.stringify({
-            "categoryId": 4,
+            "categoryId": "",
             "storeIds": ["190"],
             "pagingInfo":
             {
@@ -81,12 +81,13 @@ fragment OptimizedProductsFragment on Product {
 new Vue({
     el: '#app',
     data: {
-    	products: {
+    	productData: {
     		count: 0,
     		items: []
     	},
+    	products: [],
     	sortData: {
-    		lastKey: null,
+    		lastKey: "price",
     		reversed: false
     	}
     },
@@ -95,18 +96,25 @@ new Vue({
 			return new Date(date).toLocaleDateString();
 		},
 		sort: function(key) {
-			if(key == this.lastKey) {
-				this.reversed = !this.reversed;
+			if(key == this.sortData.lastKey) {
+				this.sortData.reversed = !this.sortData.reversed;
 			} else {
-				this.lastKey = key;
-				this.reversed = false;
+				this.sortData.reversed = false;
 			}
-			this.products.items.sort((a, b) => {
-				if (a[key] > b[key]) {
-					return this.reversed ? 1 : -1;
+			this.sortData.lastKey = key;
+
+			this.products.sort((a, b) => {
+
+				if(!isNaN(a[this.sortData.lastKey])) {
+					a[this.sortData.lastKey] *= 1;
+					b[this.sortData.lastKey] *= 1;
 				}
-				if (a[key] < b[key]) {
-					return this.reversed ? -1 : 1;
+
+				if (a[this.sortData.lastKey] > b[this.sortData.lastKey]) {
+					return this.sortData.reversed ? 1 : -1;
+				}
+				if (a[this.sortData.lastKey] < b[this.sortData.lastKey]) {
+					return this.sortData.reversed ? -1 : 1;
 				}
 				
 				return 0;
@@ -116,7 +124,15 @@ new Vue({
     created() {
 		return sendData(data)
 			.then(res => {
-				this.products = res.offersSplited.products;
+				this.productData = res.offersSplited.products;
+				this.products = 
+					this.productData.items.map(product => {
+		    			product.economy = 
+		    				(1 - (product.price / product.oldPrice)).toFixed(2);
+		    			product.period = 
+		    				`${this.getDate(product.activePeriod.start)} - ${this.getDate(product.activePeriod.end)}`
+		    			return product;
+		    		});
 			});
     }
 })
