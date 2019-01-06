@@ -13,7 +13,7 @@ function sendData(data) {
         .then(res => res.data);
 }
 
-let data = {
+let queryForProductsData = {
     query: `query offers($categoryId: ID, $storeIds: [ID], $pagingInfo: InputBatch!, $pageSlug: String!, $random: Boolean!) {
   offersSplited(categoryId: $categoryId, storeIds: $storeIds, pagingInfo: $pagingInfo, pageSlug: $pageSlug, random: $random) {
     products {
@@ -62,21 +62,23 @@ fragment OptimizedProductsFragment on Product {
   }
 }`,
     variables: JSON.stringify({
-            "categoryId": "",
+            "categoryId": 0,
             "storeIds": ["190"],
-            "pagingInfo":
-            {
-                "offset": 0,
-                "limit": 9
-            },
+            "pagingInfo":{},
             "pageSlug": "actions",
-            "random": false,
-            "fetchPolicy": "network-only"
-        }),
-    debugName: "",
-    operationName: "offers"
-}
+            "random": false
+        })
+};
 
+let queryForCategories = {
+    query: `query productCategories {
+			  productCategories {
+			    id
+			    title
+			  }
+			}`,
+    variables: {}
+}
 
 new Vue({
     el: '#app',
@@ -86,6 +88,8 @@ new Vue({
     		items: []
     	},
     	products: [],
+    	productCategories: [],
+    	selectedCategory: -1,
     	sortData: {
     		lastKey: "price",
     		reversed: false
@@ -105,6 +109,7 @@ new Vue({
 
 			this.products.sort((a, b) => {
 
+				// if this number the sort as number
 				if(!isNaN(a[this.sortData.lastKey])) {
 					a[this.sortData.lastKey] *= 1;
 					b[this.sortData.lastKey] *= 1;
@@ -119,10 +124,24 @@ new Vue({
 				
 				return 0;
 			});
-		}
+		},
+    },
+    computed: {
+    	filteredProducts: function() {
+    		return this.products.filter((product) => {
+	    		if(this.selectedCategory == -1 || this.selectedCategory == 0) {
+	    			return true;
+	    		}
+	    		return product.category.id == this.selectedCategory;
+    		});
+    	}
     },
     created() {
-		return sendData(data)
+    	sendData(queryForCategories)
+    		.then((res) => {
+    			this.productCategories = res.productCategories;
+    		});
+		return sendData(queryForProductsData)
 			.then(res => {
 				this.productData = res.offersSplited.products;
 				this.products = 

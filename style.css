@@ -90,6 +90,21 @@ body {
 	flex-grow: 0.8;
 }
 
+.category select {
+	color: var(--fifth-color);
+	text-align-last: center;
+	width: 100%;
+	background-color: transparent;
+	border: none
+}
+
+.category select:active,
+.category select:hover,
+.category select:focus {
+	border: none;
+	outline: none;
+}
+
 .weight {
 	flex-grow: 0.4;
 }

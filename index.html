@@ -26,14 +26,24 @@
 			<div class="head">
 				<div class="title" 		v-on:click="sort('title')">Title</div>
 				<div class="image">Image</div>
-				<div class="category">Category</div>
+				<div class="category">
+					<select name="category" 
+							v-model="selectedCategory">
+						<option value="-1" disabled>Category</option>
+						<option value="0">Все</option>
+						<option v-for="category in productCategories" :value="category.id">
+							{{ category.title }}
+						</option>
+					</select>
+				</div>
 				<div class="weight" 	v-on:click="sort('weight')">Weight</div>
 				<div class="economy" 	v-on:click="sort('economy')">Percent</div>
 				<div class="price" 		v-on:click="sort('price')">Price</div>
 				<div class="old-price" 	v-on:click="sort('oldPrice')">Old Price</div>
 				<div class="period" 	v-on:click="sort('period')">Period</div>
 			</div>
-			<div class="item" v-for="product in products">
+			<div class="item" 
+				 v-for="product in filteredProducts">
 				<div class="title">{{ product.title }}</div>
 				<div class="image">
 					<img :src="product.image.url" />
