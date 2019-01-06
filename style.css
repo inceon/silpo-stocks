@@ -125,6 +125,12 @@ body {
 	flex-grow: 1;
 }
 
+.nothing-to-view {
+	color: var(--main-color);
+	text-align: center;
+    padding: 20px;
+}
+
 /* Loader */
 .lds-roller {
   display: inline-block;

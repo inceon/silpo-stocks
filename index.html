@@ -42,7 +42,10 @@
 				<div class="old-price" 	v-on:click="sort('oldPrice')">Old Price</div>
 				<div class="period" 	v-on:click="sort('period')">Period</div>
 			</div>
-			<div class="lds-roller" v-if="!filteredProducts.length"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+			<div class="lds-roller" v-if="!products.length"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+			<div class="nothing-to-view" v-if="!filteredProducts.length && products.length">
+				Here is nothing for view.
+			</div>
 			<div class="item" 
 				 v-for="product in filteredProducts">
 				<div class="title">{{ product.title }}</div>
