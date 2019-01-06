@@ -62,7 +62,7 @@ fragment OptimizedProductsFragment on Product {
   }
 }`,
     variables: JSON.stringify({
-            "categoryId": 2,
+            "categoryId": 4,
             "storeIds": ["190"],
             "pagingInfo":
             {
@@ -81,9 +81,36 @@ fragment OptimizedProductsFragment on Product {
 new Vue({
     el: '#app',
     data: {
-    	products: [],
+    	products: {
+    		count: 0,
+    		items: []
+    	},
+    	sortData: {
+    		lastKey: null,
+    		reversed: false
+    	}
+    },
+    methods: {
     	getDate: (date) => {
 			return new Date(date).toLocaleDateString();
+		},
+		sort: function(key) {
+			if(key == this.lastKey) {
+				this.reversed = !this.reversed;
+			} else {
+				this.lastKey = key;
+				this.reversed = false;
+			}
+			this.products.items.sort((a, b) => {
+				if (a[key] > b[key]) {
+					return this.reversed ? 1 : -1;
+				}
+				if (a[key] < b[key]) {
+					return this.reversed ? -1 : 1;
+				}
+				
+				return 0;
+			});
 		}
     },
     created() {
