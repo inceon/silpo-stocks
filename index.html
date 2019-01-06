@@ -3,8 +3,91 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Table for silpo stocks</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.21/vue.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,900" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	
+	<div id="app">
+		<!-- <p>
+			{{ products.count }}
+		</p>
+		<div>
+			<ul>
+				<li v-for="product in products.items">
+					{{ product.title }}
+				</li>
+			</ul>
+		</div> -->
+		
+		<div class="table">
+			
+			<div class="head">
+				<div class="title">Title</div>
+				<div class="image">Image</div>
+				<div class="category">Category</div>
+				<div class="weight">Weight</div>
+				<div class="economy">Percent</div>
+				<div class="price">Price</div>
+				<div class="old-price">Old Price</div>
+				<div class="period">Period</div>
+			</div>
+			<div class="item" v-for="product in products.items">
+				<div class="title">{{ product.title }}</div>
+				<div class="image">
+					<img :src="product.image.url" />
+				</div>
+				<div class="category">{{ product.category.title }}</div>
+				<div class="weight">{{ product.weight }}</div>
+				<div class="economy">{{ (1 - (product.price / product.oldPrice)).toFixed(2) }}</div>
+				<div class="price">{{ product.price }}</div>
+				<div class="old-price">{{ product.oldPrice }}</div>
+				<div class="period">
+					{{ getDate(product.activePeriod.start) }} -
+					{{ getDate(product.activePeriod.end) }}
+				</div>
+			</div>
+		</div>
+
+
+		<!-- {
+		  "id": "16990",
+		  "slug": "svinina-lopatka-biez-kistki-okholodzhiena",
+		  "title": "Свинина, лопатка без кістки охолоджена",
+		  "category": {
+		    "id": "1",
+		    "title": "М'ясо"
+		  },
+		  "articul": 443458,
+		  "weight": "кг",
+		  "image": {
+		    "url": "https://content.silpo.ua/uploads/2019/01/03/5c2d3462d3fde.png"
+		  },
+		  "price": "89.89",
+		  "oldPrice": "105.99",
+		  "appearance": {
+		    "size": "NORMAL",
+		    "color": "VIOLET"
+		  },
+		  "promotion": {
+		    "id": "11",
+		    "slug": "cina-tizhnya",
+		    "labelIcon": {
+		      "url": "https://content.silpo.ua/uploads/2017/03/29/58dbaf6a393e3.svg"
+		    },
+		    "labelIconReversed": {
+		      "url": "https://content.silpo.ua/uploads/2017/03/29/58dbaf6a36799.svg"
+		    }
+		  },
+		  "activePeriod": {
+		    "start": "2019-01-03T00:00:00.000Z",
+		    "end": "2019-01-09T00:00:00.000Z"
+		  }
+		} -->
+
+	</div>
+
+	<script src="main.js"></script>
 </body>
 </html>
